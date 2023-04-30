@@ -10,59 +10,43 @@ class Browser(commands.Cog):
     @commands.command(pass_context=True) 
     async def join(self, ctx):
         voice = get(self.client.voice_clients, guild=ctx.guild)
-        author_channel = ctx.author.voice
-        
-        if not author_channel:
+
+        #Verifica se o usuario está em um canal de audio
+        if not ctx.author.voice:
             return await ctx.send("```Você não está em um canal de audio.```")
-        author_channel = author_channel.channel
 
+        #Verifica se o bot está em canal de audio, caso não esteja ele se conecta ao canal do usuario
         if (voice == None):
-            return await author_channel.connect()
+            return await ctx.author.voice.channel.connect()
         
-        if (voice.channel == author_channel):
-            return await ctx.send("```O bot ja está conectado no canal de audio.```")
+        #Valida se está no mesmo canal de audio do usuario
+        if (voice.channel == ctx.author.voice.channel):
+            return await ctx.send("```Já estou conectado no canal de audio.```")
+
+        #Valida se o bot está tocando alguma musica em outro canal
         elif (voice.is_playing() or voice.is_paused()):
-            return await ctx.send('```O bot esta tocando uma musica em outro canal de audio.```')
-        elif (not voice.is_playing() and not voice.is_paused()):
-            return await author_channel.connect()
+            return await ctx.send('```Estou tocando uma musica em outro canal de audio.```')
 
-
-    @commands.command(pass_context=True)
-    async def joinforce(self, ctx):
-        voice = get(self.client.voice_clients, guild=ctx.guild)
-        author_channel = ctx.author.voice
-        
-        if (author_channel == None):
-            return await ctx.send("```Você não está em um canal de audio.```")
-        author_channel = author_channel.channel
-
-        if (voice == None):
-            return await author_channel.connect()
-        elif (voice.channel == author_channel):
-            return await ctx.send("```O bot ja está conectado no canal de audio.```")
-        elif (voice.is_playing() or voice.is_paused()):
-            await voice.move_to(author_channel)
-        else:
-            await voice.disconnect()
-            return await author_channel.connect()
+        return await voice.move_to(ctx.author.voice.channel)
 
 
     @commands.command(pass_context=True)
     async def leave(self, ctx):
         voice = get(self.client.voice_clients, guild=ctx.guild)
-        author_channel = ctx.author.voice
-        
-        if (voice == None):
-            return await ctx.send("```O bot não esta conectado em nenhum canal de audio```")
-        
-        if (author_channel == None):
-            return await ctx.send("```Você não está no mesmo canal de audio do bot.```")
-        author_channel = author_channel.channel
 
+        #Verifica se o usuario está em um canal de audio
+        if not ctx.author.voice:
+            return await ctx.send("```Você não está no mesmo canal de audio que eu.```")
+
+        #Verifica se o bot está em canal de audio
+        if (voice == None):
+            return await ctx.send("```Não estou em nenhum canal de audio```")
+
+        #Valida se o bot está tocando alguma musica em outro canal
         if (voice.is_playing() or voice.is_paused()):
-            return await ctx.send("```Pare a musica antes de pedir para o bot sair.```")
-        else:
-            return await voice.disconnect()
+            return await ctx.send("```Pare a musica antes de pedir para eu sair.```")
+
+        return await voice.disconnect()
 
 
 
