@@ -69,7 +69,7 @@ class Client(commands.Bot):
         if isinstance(error, commands.errors.MemberNotFound):
             return await ctx.send("```Usuario mencionado não existe nesse servidor.```")
         elif isinstance(error, commands.errors.CommandNotFound):
-            return await ctx.send(f"```Comando não encontrado, digite {self.get_prefix(ctx.message)}help.```")
+            return await ctx.send(f"```Comando não encontrado, digite {await self.get_prefix(ctx.message)}help.```")
         elif isinstance(error, commands.errors.MissingPermissions):
             return await ctx.send("```Você não tem permissão para realizar esse comando.```")
         elif isinstance(error, commands.errors.MissingRequiredArgument):

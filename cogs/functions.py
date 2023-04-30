@@ -19,8 +19,10 @@ class Functions(commands.Cog):
     async def clear(self, ctx, user=None, amount=None):
         info_ = {'user': None, 'amount':None}
 
+        #Verifica se foi passado algo para a variavel user
         if (user != None):
             if (user.startswith('<@') and user.endswith('>')):
+                #Caso o inicio e o fim da string user esteja de acordo é convertido para o usuario
                 user = await commands.MemberConverter().convert(ctx, user)
                 info_['user'] = user
                 info_['amount'] = '0' if amount == None else amount
@@ -28,15 +30,17 @@ class Functions(commands.Cog):
                 info_['amount'] = user
         else:
             info_['amount'] = '0'
-        
+
         if not info_["amount"].isdigit():
             return await ctx.send("```A informação passada não é um numero inteiro```")
 
-        delete_ = int(info_["amount"]) if int(info_["amount"]) > 0 else 10000
+        delete_ = int(info_["amount"]) if int(info_["amount"]) > 0 else 10_000
 
         if (info_["user"] != None):
             limit = 10_000 if delete_ < 10_000 else delete_ * 2
             count = 0
+
+            #Acessa cada mensagem no historico e conta as reais mensagens que serão deletadas.
             async for message in ctx.channel.history(limit=limit):
                 if message.author == info_["user"]:
                     delete_ -= 1
@@ -58,19 +62,20 @@ class Functions(commands.Cog):
 
     @commands.command(pass_context=True, help="Troca o prefixo do servidor")
     @has_permissions(ban_members=True, kick_members=True, manage_channels=True, manage_roles=True)
-    async def changeprefix(self, ctx, *kwargs):
-        if len(kwargs) > 0:
-            if not kwargs[0].isdigit():
+    async def changeprefix(self, ctx, prefix: str):
+        if prefix:
+            if not prefix.isdigit():
                 with open('prefix.json', 'r') as file:
                     prefixes = json.load(file)
 
-                prefix = kwargs[0].replace('\'', '').replace('\"', "")
                 prefixes[str(ctx.guild.id)] = prefix
 
                 with open('prefix.json', 'w') as file:
                     json.dump(prefixes, file, indent=4)
 
                 return await ctx.send(f"```Novo prefixo: {prefix}```")
+            else:
+                return await ctx.send("```O novo prefixo precisa ser simbolo ou texto.```")
         else:
             return await ctx.send("```Você não mandou o novo prefixo.```")
 
