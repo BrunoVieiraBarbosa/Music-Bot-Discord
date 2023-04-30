@@ -8,9 +8,9 @@ Um simples bot de musica para o Discord. Um dos primeiros que criei.
 * **Alterar** a ordem das músicas.
 * **Repetir** uma ou várias vezes
 * **Voltar** para a música anterior
-* Ver **informações** da música que está ouvindo
+* **Ver informações** da música que está ouvindo
 * **Pausar**, **continuar**, **parar** e **pular** a música
-* Alterar o **volume**
+* **Alterar** o **volume**
 * **Apagar** mensagens
 
 
