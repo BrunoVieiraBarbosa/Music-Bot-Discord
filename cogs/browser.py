@@ -66,5 +66,5 @@ class Browser(commands.Cog):
 
 
 
-def setup(client):
-    client.add_cog(Browser(client))
+async def setup(client):
+    await client.add_cog(Browser(client))

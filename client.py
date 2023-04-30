@@ -6,7 +6,6 @@ import json, discord, os
 class Client(commands.Bot):
     def __init__(self, command_prefix, help_command=DefaultHelpCommand(), description=None, **options):
         super().__init__(command_prefix, help_command=help_command, description=description, **options)
-        self.read_cogs()
 
 
     @staticmethod
@@ -22,10 +21,10 @@ class Client(commands.Bot):
         return prefixes[str(message.guild.id)]
 
 
-    def read_cogs(self):
+    async def read_cogs(self):
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
-                self.load_extension(f"cogs.{filename[:-3]}")
+                await self.load_extension(f"cogs.{filename[:-3]}")
 
 
     async def on_guild_join(guild):
@@ -72,15 +71,13 @@ class Client(commands.Bot):
 
     async def who_i_am(self, message):
         prefix_ = await Client.get_prefix(message)
-        msembed = discord.Embed(title="Eu sou o <Nome do Bot>")
+        msembed = discord.Embed(title=f"Eu sou o {self.user.name}")
         msembed.add_field(name=f"{prefix_}", value=f"\'{prefix_}\' é o seu prefixo.", inline=False)
         msembed.add_field(name=f"{prefix_}help", value="Esse comando ira te mostrar todos os comandos que tenho.", inline=False)
-        msembed.add_field(name=f"{prefix_}play", value=f"[{prefix_}play <Nome ou link da musica>] Esse comando ira reproduzir uma musica.", inline=False)
         return await message.channel.send(embed=msembed)
 
 
     async def on_message(self, message):
-        mention = f'<@{self.user.id}>'
-        if message.content.startswith(mention):
+        if message.content.startswith(f'<@{self.user.id}>'):
             return await self.who_i_am(message)
         await self.process_commands(message)

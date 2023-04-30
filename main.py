@@ -1,9 +1,12 @@
 from client import Client
-import discord
+import discord, credentials, asyncio
 
+
+async def main():
+    client = Client(command_prefix = Client.get_prefix, intents=discord.Intents.all())
+    await client.read_cogs()
+    await client.start(credentials.TOKEN)
+    
 
 if (__name__ == "__main__"):
-    client = Client(command_prefix = Client.get_prefix, intents=discord.Intents.all())
-
-    token = 'YOUR-TOKEN'
-    client.run(token)
+    asyncio.run(main())

@@ -75,5 +75,5 @@ class Functions(commands.Cog):
             return await ctx.send("```Você não mandou o novo prefixo.```")
 
 
-def setup(client):
-    client.add_cog(Functions(client))
+async def setup(client):
+    await client.add_cog(Functions(client))
