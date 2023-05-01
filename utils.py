@@ -2,7 +2,10 @@ from youtube_dl import YoutubeDL
 import requests, re
 
 
-YDL_OPTION = {'format': 'bestaudio/best', 'noplaylist':'True', 'quiet':'True'}
+YDL_OPTION = {'format': 'bestaudio/best',
+              'noplaylist':'True',
+              'quiet':'True',
+              'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredquality': '192'}]}
 
 
 async def get_playlist_links(url: str):
